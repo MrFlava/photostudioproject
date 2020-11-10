@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (PhotoCenter, PhotoOffice, PhotoStand, Order, Item, Provider,
-                     ItemProvider, AdditionalService,  ItemOrder, AdditionalServicesOrder)
+                     ItemProvider, AdditionalService,  ItemOrder, AdditionalServicesOrder, Customer)
 
 # Register your models here.
 
@@ -46,6 +46,10 @@ class AdditionalServicesOrderAdmin(admin.ModelAdmin):
     model = AdditionalServicesOrder
 
 
+class CustomerAdmin(admin.ModelAdmin):
+    model = Customer
+
+
 admin.site.register(AdditionalServicesOrder, AdditionalServicesOrderAdmin)
 admin.site.register(AdditionalService, AdditionalServiceAdmin)
 admin.site.register(ItemProvider, ItemProviderAdmin)
@@ -54,6 +58,7 @@ admin.site.register(PhotoOffice, PhotoOfficeAdmin)
 admin.site.register(PhotoStand, PhotoStandAdmin)
 admin.site.register(ItemOrder, ItemOrderAdmin)
 admin.site.register(Provider, ProviderAdmin)
+admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Item, ItemAdmin)
 

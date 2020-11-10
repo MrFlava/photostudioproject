@@ -6,8 +6,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth import get_user_model
 
 
-
 # Create your models here.
+
 
 class AdditionalServicesType(enum.Enum):
     PASSPORT_PHOTO = 'Passport photo'
@@ -38,8 +38,8 @@ class ItemType(enum.Enum):
 
 
 class CustomerType(enum.Enum):
-    PROFESSIONAL = 'professional'
-    FAN = 'FAN'
+    PROFESSIONAL = 'Professional'
+    FAN = 'Fan'
 
     @classmethod
     def choices(cls):
@@ -145,7 +145,7 @@ class Customer(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return f"Customer #{self.pk}: {self.user.name}"
+        return f"Customer #{self.pk}: {self.user}"
 
 
 class Order(models.Model):
@@ -158,7 +158,7 @@ class Order(models.Model):
     photo_office = models.ForeignKey(PhotoOffice, on_delete=models.CASCADE, null=True, blank=True)
     photo_stand = models.ForeignKey(PhotoStand, on_delete=models.CASCADE, null=True, blank=True)
     price = models.PositiveIntegerField(default=0)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
     objects = models.Manager()
 
@@ -181,6 +181,8 @@ class Item(models.Model):
     title = models.CharField(max_length=120)
     description = models.TextField(max_length=250)
     price = models.PositiveIntegerField(default=0)
+    photo_office = models.ForeignKey(PhotoOffice, on_delete=models.CASCADE, null=True, blank=True)
+    photo_stand = models.ForeignKey(PhotoStand, on_delete=models.CASCADE, null=True, blank=True)
     providers = models.ManyToManyField('Provider', through='ItemProvider')
 
     objects = models.Manager()
@@ -201,7 +203,7 @@ class AdditionalService(models.Model):
 
 class ItemOrder(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
     objects = models.Manager()
 
@@ -211,7 +213,7 @@ class ItemOrder(models.Model):
 
 class AdditionalServicesOrder(models.Model):
     additional_service = models.ForeignKey(AdditionalService, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
     objects = models.Manager()
 
