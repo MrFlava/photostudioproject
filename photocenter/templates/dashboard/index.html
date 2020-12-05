@@ -20,7 +20,7 @@
         <header class="masthead bg-primary text-white text-center">
             <div class="container d-flex align-items-center flex-column">
                 <!-- Masthead Heading-->
-                <h1 class="masthead-heading text-uppercase mb-0">Photo Center dashboard</h1>
+                <h1 class="masthead-heading text-uppercase mb-0">Photo Centers</h1>
                 <!-- Icon Divider-->
                 <div class="divider-custom divider-light">
                     <div class="divider-custom-line"></div>
@@ -31,27 +31,30 @@
             </div>
         </header>
         <!-- About Section-->
-        <section class="page-section bg-primary text-white mb-0" id="about">
+        <section class="page-section portfolio" id="portfolio">
             <div class="container">
-                <!-- About Section Heading-->
-                <h2 class="page-section-heading text-center text-uppercase text-white">About</h2>
+                <!-- Portfolio Section Heading-->
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Photo centres</h2>
                 <!-- Icon Divider-->
-                <div class="divider-custom divider-light">
+                <div class="divider-custom">
                     <div class="divider-custom-line"></div>
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                     <div class="divider-custom-line"></div>
                 </div>
-                <!-- About Section Content-->
-                <div class="row">
-                    <div class="col-lg-4 ml-auto"><p class="lead">It is an app for monitoring information about photo centers.</p></div>
-                    <div class="col-lg-4 mr-auto"><p class="lead">You can see all data about photo offices and stands. There are a few filters so you can use them for filtering data.</p></div>
+                <!-- Portfolio Grid Items-->
+                {% for photo_center in photo_centres %}
+                <div class="row justify-content-center">
+                    <div class="col-md-6 col-lg-4 mb-5">
+                        <div class="portfolio-item mx-auto" data-toggle="modal">
+                            <p>Title: {{ photo_center.title }}</p>
+                            <p>Headquarters address: {{ photo_center.headquarters_address }}</p>
+                            <a class="btn text-white btn-primary btn-lg mr-2" href="photo_center/{{ photo_center.pk }}/offices" role="button">Offices</a>
+                            <a class="btn text-white btn-primary btn-lg mr-2" href="photo_center/{{ photo_center.pk }}/stands"  role="button">Stands</a>
+
+                        </div>
+                    </div>
                 </div>
-                <!-- About Section Button-->
-                <div class="text-center mt-4">
-                    <a class="btn btn-xl btn-outline-light" href="/photo_centres">
-                        Dashboard
-                    </a>
-                </div>
+                {% endfor %}
             </div>
         </section>
 

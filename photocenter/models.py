@@ -18,7 +18,6 @@ class AdditionalServicesType(enum.Enum):
 
     @classmethod
     def choices(cls):
-        print(tuple((i.name, i.value) for i in cls))
         return tuple((i.name, i.value) for i in cls)
 
 
@@ -33,24 +32,26 @@ class ItemType(enum.Enum):
 
     @classmethod
     def choices(cls):
-        print(tuple((i.name, i.value) for i in cls))
         return tuple((i.name, i.value) for i in cls)
 
 
-class CustomerType(enum.Enum):
+class ProfileType(enum.Enum):
     PROFESSIONAL = 'Professional'
     FAN = 'Fan'
 
     @classmethod
     def choices(cls):
-        print(tuple((i.name, i.value) for i in cls))
         return tuple((i.name, i.value) for i in cls)
 
 
 class OrderType(enum.Enum):
-    FILM_DEVELOPMENT = 'film development'
+    FILM_DEVELOPMENT = 'Film development'
     PHOTO_PRINTING_AND_DEVELOPMENT = 'Photo printing and development'
-    PRINT_TOGETHER = 'print together'
+    PRINT_TOGETHER = 'Print together'
+
+    @classmethod
+    def choices(cls):
+        return tuple((i.name, i.value) for i in cls)
 
 
 class OrderPriorityType(enum.Enum):
@@ -59,7 +60,6 @@ class OrderPriorityType(enum.Enum):
 
     @classmethod
     def choices(cls):
-        print(tuple((i.name, i.value) for i in cls))
         return tuple((i.name, i.value) for i in cls)
 
 
@@ -78,7 +78,6 @@ class PaperFormat(enum.Enum):
 
     @classmethod
     def choices(cls):
-        print(tuple((i.name, i.value) for i in cls))
         return tuple((i.name, i.value) for i in cls)
 
 
@@ -92,7 +91,6 @@ class PaperType(enum.Enum):
 
     @classmethod
     def choices(cls):
-        print(tuple((i.name, i.value) for i in cls))
         return tuple((i.name, i.value) for i in cls)
 
 
@@ -138,14 +136,14 @@ class PhotoStand(models.Model):
         return f"Stand #{self.pk} located at {self.address}"
 
 
-class Customer(models.Model):
+class UserProfile(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    type = models.CharField(max_length=120, choices=CustomerType.choices())
+    type = models.CharField(max_length=120, choices=ProfileType.choices())
 
     objects = models.Manager()
 
     def __str__(self):
-        return f"Customer #{self.pk}: {self.user}"
+        return f"Profile #{self.pk}: {self.user}"
 
 
 class Order(models.Model):
@@ -154,11 +152,13 @@ class Order(models.Model):
     paper_format = models.CharField(max_length=120, choices=PaperFormat.choices())
     paper_type = models.CharField(max_length=120, choices=PaperType.choices())
     priority = models.CharField(max_length=120, choices=OrderPriorityType.choices())
+    order_type = models.CharField(max_length=120, choices=OrderType.choices(), default=OrderType.FILM_DEVELOPMENT)
+    creation_date = models.DateTimeField(default=datetime.datetime.now())
     term = models.DateTimeField(default=datetime.datetime.now())
     photo_office = models.ForeignKey(PhotoOffice, on_delete=models.CASCADE, null=True, blank=True)
     photo_stand = models.ForeignKey(PhotoStand, on_delete=models.CASCADE, null=True, blank=True)
     price = models.PositiveIntegerField(default=0)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     objects = models.Manager()
 
@@ -184,6 +184,7 @@ class Item(models.Model):
     photo_office = models.ForeignKey(PhotoOffice, on_delete=models.CASCADE, null=True, blank=True)
     photo_stand = models.ForeignKey(PhotoStand, on_delete=models.CASCADE, null=True, blank=True)
     providers = models.ManyToManyField('Provider', through='ItemProvider')
+    quantity = models.PositiveIntegerField(default=1)
 
     objects = models.Manager()
 
@@ -195,6 +196,11 @@ class ItemProvider(models.Model):
     provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
 
+    objects = models.Manager()
+
+    def __str__(self):
+        return f"Provider {self.provider}for  {self.item}"
+
 
 class AdditionalService(models.Model):
     service_type = models.CharField(max_length=120, choices=AdditionalServicesType.choices())
@@ -203,7 +209,8 @@ class AdditionalService(models.Model):
 
 class ItemOrder(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    creation_date = models.DateTimeField(default=datetime.datetime.now())
 
     objects = models.Manager()
 
@@ -213,7 +220,8 @@ class ItemOrder(models.Model):
 
 class AdditionalServicesOrder(models.Model):
     additional_service = models.ForeignKey(AdditionalService, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    creation_date = models.DateTimeField(default=datetime.datetime.now())
 
     objects = models.Manager()
 

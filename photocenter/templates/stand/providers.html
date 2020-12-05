@@ -20,7 +20,7 @@
         <header class="masthead bg-primary text-white text-center">
             <div class="container d-flex align-items-center flex-column">
                 <!-- Masthead Heading-->
-                <h1 class="masthead-heading text-uppercase mb-0">Photo Center dashboard</h1>
+                <h1 class="masthead-heading text-uppercase mb-0">Photo Stands</h1>
                 <!-- Icon Divider-->
                 <div class="divider-custom divider-light">
                     <div class="divider-custom-line"></div>
@@ -31,27 +31,31 @@
             </div>
         </header>
         <!-- About Section-->
-        <section class="page-section bg-primary text-white mb-0" id="about">
+        <section class="page-section portfolio" id="portfolio">
             <div class="container">
-                <!-- About Section Heading-->
-                <h2 class="page-section-heading text-center text-uppercase text-white">About</h2>
+                <!-- Portfolio Section Heading-->
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Information about stand</h2>
                 <!-- Icon Divider-->
-                <div class="divider-custom divider-light">
+                <div class="divider-custom">
                     <div class="divider-custom-line"></div>
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                     <div class="divider-custom-line"></div>
                 </div>
-                <!-- About Section Content-->
-                <div class="row">
-                    <div class="col-lg-4 ml-auto"><p class="lead">It is an app for monitoring information about photo centers.</p></div>
-                    <div class="col-lg-4 mr-auto"><p class="lead">You can see all data about photo offices and stands. There are a few filters so you can use them for filtering data.</p></div>
+                <h4 class="page-section-heading text-center text-uppercase text-secondary pb-2">Stand #{{ stand }}</h4>
+                {% if earnings %}
+                    <h4 class="page-section-heading text-center text-uppercase text-secondary pb-2">Earnings: {{ earnings }}</h4>
+                {% endif %}
+                <!-- Portfolio Grid Items-->
+                {% for provider in providers %}
+                <div class="row justify-content-center">
+                    <div class="col-md-6 col-lg-4 mb-5">
+                        <div class="portfolio-item mx-auto" data-toggle="modal">
+                            <p>Provider #{{ provider.pk }}</p>
+                            <p>Name: {{ provider.name }}</p>
+                        </div>
+                    </div>
                 </div>
-                <!-- About Section Button-->
-                <div class="text-center mt-4">
-                    <a class="btn btn-xl btn-outline-light" href="/photo_centres">
-                        Dashboard
-                    </a>
-                </div>
+                {% endfor %}
             </div>
         </section>
 
